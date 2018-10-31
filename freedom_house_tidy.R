@@ -1,5 +1,7 @@
 library(readxl)
 library(tidyverse)
+library(countrycode)
+
 
 fh_link <- 'https://freedomhouse.org/sites/default/files/Country%20and%20Territory%20Ratings%20and%20Statuses%20FIW1973-2018.xlsx'
 download.file(fh_link,destfile = 'fhrankings.xlsx')
@@ -60,8 +62,6 @@ fh_nested <- fh_tidy %>%
   group_by(country) %>%
   nest()
 
-library(countrycode)
-
 fh_nested$continent <-
   countrycode(
     sourcevar = fh_nested$country,
@@ -77,4 +77,4 @@ fh_nested[is.na(fh_nested$continent), 'continent'] <-
 
 fh_nested %>% 
   unnest(data) %>% 
-  write_rds('freedom_house_ratings.rds')
+  write_csv('freedom_house_ratings.rds')
